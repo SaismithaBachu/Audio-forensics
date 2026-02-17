@@ -10,8 +10,12 @@ MAX_FRAMES = 320
 
 
 class MultiTaskAudioDataset(Dataset):
-    def __init__(self, csv_path, base_dir, sr=16000):
+    def __init__(self, csv_path, base_dir, sr=44100):
         self.df = pd.read_csv(csv_path)
+
+        # 🔹 Keep only real devices
+        self.df = self.df[self.df["source_label"].isin(['a', 'b', 'c'])].reset_index(drop=True)
+
         self.base_dir = base_dir.rstrip("/") + "/"
         self.sr = sr
 
