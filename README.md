@@ -167,8 +167,3 @@ Dataset: [DCASE 2020](https://dcase.community/) (Creative Commons)
 
 Code: [Your License]
 
----
-
-## Contact
-
-For issues, open a GitHub issue or contact [your email].
