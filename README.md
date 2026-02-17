@@ -159,11 +159,4 @@ audio_forensics/
 
 See `requirements.txt` for pinned versions.
 
----
-
-## License
-
-Dataset: [DCASE 2020](https://dcase.community/) (Creative Commons)
-
-Code: [Your License]
 
