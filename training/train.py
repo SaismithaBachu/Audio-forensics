@@ -15,12 +15,14 @@ from models.multitask_crnn import MultiTaskCRNN
 
 # ---------------- CONFIG ----------------
 BATCH_SIZE = 16
-EPOCHS = 10
+EPOCHS = 15
 LR = 1e-3
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 DATASET_ROOT = r"D:\MajorProject\data\raw\TAU_2020"
 
+RESUME = True
+CHECKPOINT_PATH = "artifacts/checkpoint_epoch10.pth"
 # ----------------------------------------
 
 
@@ -67,8 +69,31 @@ def main():
 
     optimizer = torch.optim.Adam(model.parameters(), lr=LR)
 
+    # -------- Resume from Checkpoint --------
+    start_epoch = 0
+
+    if RESUME and os.path.exists(CHECKPOINT_PATH):
+        print("Loading checkpoint...")
+        checkpoint = torch.load(CHECKPOINT_PATH, map_location=DEVICE)
+        
+        # Old format (only state_dict)
+        if isinstance(checkpoint, dict) and "model_state_dict" not in checkpoint:
+            model.load_state_dict(checkpoint)
+            start_epoch = 10  # we know this is epoch 10
+            print("Loaded old-format checkpoint (weights only)")
+
+        # New format (full dictionary)
+        else:
+            model.load_state_dict(checkpoint["model_state_dict"])
+            optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+            start_epoch = checkpoint["epoch"] + 1
+            print("Loaded full checkpoint")
+
+        print(f"Resuming from epoch {start_epoch}")
+
+
     # -------- Training Loop --------
-    for epoch in range(EPOCHS):
+    for epoch in range(start_epoch, EPOCHS):
         model.train()
         total_loss = 0
 
@@ -84,7 +109,7 @@ def main():
             loss_scene = scene_criterion(scene_logits, scene)
             loss_device = device_criterion(device_logits, device)
 
-            loss = loss_scene + loss_device
+            loss = 2.0 * loss_scene + 1.0 * loss_device
             loss.backward()
             optimizer.step()
 
@@ -95,17 +120,21 @@ def main():
         print(f"\nEpoch [{epoch+1}/{EPOCHS}] - Train Loss: {avg_loss:.4f}")
 
         # Run validation and get validation loss
-        validate(model, val_loader, scene_criterion, device_criterion)
+        validate(model, val_loader)
 
         # -------- Save checkpoint --------
         os.makedirs("artifacts", exist_ok=True)
         ckpt_path = os.path.join("artifacts", f"checkpoint_epoch{epoch+1}.pth")
-        torch.save(model.state_dict(), ckpt_path)
+        torch.save({
+            "epoch": epoch,
+            "model_state_dict": model.state_dict(),
+            "optimizer_state_dict": optimizer.state_dict(),
+        }, ckpt_path)
 
         print(f"Saved checkpoint: {ckpt_path}")
 
 
-def validate(model, loader, scene_criterion, device_criterion):
+def validate(model, loader):
     model.eval()
     correct_scene = 0
     correct_device = 0
