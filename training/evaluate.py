@@ -1,3 +1,4 @@
+from pyexpat import model
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -16,7 +17,7 @@ from models.multitask_crnn import MultiTaskCRNN
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 DATASET_ROOT = r"D:\MajorProject\data\raw\TAU_2020"
-CHECKPOINT_PATH = "artifacts/checkpoint_epoch7.pth"
+CHECKPOINT_PATH = "artifacts/checkpoint_epoch8.pth"
 # ----------------------------------------
 
 def main():
@@ -37,7 +38,13 @@ def main():
     num_devices = len(val_dataset.device_to_idx)
 
     model = MultiTaskCRNN(num_scenes, num_devices).to(DEVICE)
-    model.load_state_dict(torch.load(CHECKPOINT_PATH, map_location=DEVICE))
+    checkpoint = torch.load(CHECKPOINT_PATH, map_location=DEVICE)
+
+    # Handle both formats
+    if isinstance(checkpoint, dict) and "model_state_dict" in checkpoint:
+        model.load_state_dict(checkpoint["model_state_dict"])
+    else:
+        model.load_state_dict(checkpoint)
     model.eval()
 
     all_scene_preds = []

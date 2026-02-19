@@ -48,6 +48,9 @@ class MultiTaskCRNN(nn.Module):
         # Concatenate last forward & backward hidden states
         features = torch.cat((hn[-2], hn[-1]), dim=1)
 
+        # 🔹 Add Dropout (Regularization)
+        features = nn.functional.dropout(features, p=0.4, training=self.training)
+
         scene_out = self.scene_head(features)
         device_out = self.device_head(features)
 

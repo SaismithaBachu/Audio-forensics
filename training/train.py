@@ -21,7 +21,7 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 DATASET_ROOT = r"D:\MajorProject\data\raw\TAU_2020"
 
-RESUME = True
+RESUME = False
 CHECKPOINT_PATH = "artifacts/checkpoint_epoch10.pth"
 # ----------------------------------------
 
@@ -109,7 +109,8 @@ def main():
             loss_scene = scene_criterion(scene_logits, scene)
             loss_device = device_criterion(device_logits, device)
 
-            loss = 2.0 * loss_scene + 1.0 * loss_device
+            loss = loss_scene + loss_device
+
             loss.backward()
             optimizer.step()
 
