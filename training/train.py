@@ -15,14 +15,11 @@ from models.multitask_crnn import MultiTaskCRNN
 
 # ---------------- CONFIG ----------------
 BATCH_SIZE = 16
-EPOCHS = 15
+EPOCHS = 20
 LR = 1e-3
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 DATASET_ROOT = r"D:\MajorProject\data\raw\TAU_2020"
-
-RESUME = False
-CHECKPOINT_PATH = "artifacts/checkpoint_epoch10.pth"
 # ----------------------------------------
 
 
@@ -69,31 +66,16 @@ def main():
 
     optimizer = torch.optim.Adam(model.parameters(), lr=LR)
 
-    # -------- Resume from Checkpoint --------
-    start_epoch = 0
-
-    if RESUME and os.path.exists(CHECKPOINT_PATH):
-        print("Loading checkpoint...")
-        checkpoint = torch.load(CHECKPOINT_PATH, map_location=DEVICE)
-        
-        # Old format (only state_dict)
-        if isinstance(checkpoint, dict) and "model_state_dict" not in checkpoint:
-            model.load_state_dict(checkpoint)
-            start_epoch = 10  # we know this is epoch 10
-            print("Loaded old-format checkpoint (weights only)")
-
-        # New format (full dictionary)
-        else:
-            model.load_state_dict(checkpoint["model_state_dict"])
-            optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
-            start_epoch = checkpoint["epoch"] + 1
-            print("Loaded full checkpoint")
-
-        print(f"Resuming from epoch {start_epoch}")
-
+    # 🔥 Learning Rate Scheduler
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+        optimizer,
+        mode='max',        # because we monitor scene accuracy
+        factor=0.5,        # reduce LR by half
+        patience=2,        # wait 2 epochs without improvement
+    )
 
     # -------- Training Loop --------
-    for epoch in range(start_epoch, EPOCHS):
+    for epoch in range(EPOCHS):
         model.train()
         total_loss = 0
 
@@ -121,7 +103,13 @@ def main():
         print(f"\nEpoch [{epoch+1}/{EPOCHS}] - Train Loss: {avg_loss:.4f}")
 
         # Run validation and get validation loss
-        validate(model, val_loader)
+        scene_acc = validate(model, val_loader)
+
+        # -------- Update scheduler --------
+        scheduler.step(scene_acc)
+
+        current_lr = optimizer.param_groups[0]['lr']
+        print(f"Current LR: {current_lr}")
 
         # -------- Save checkpoint --------
         os.makedirs("artifacts", exist_ok=True)
@@ -163,6 +151,7 @@ def validate(model, loader):
         f"Validation | Scene Acc: {scene_acc:.2f}% | "
         f"Device Acc: {device_acc:.2f}%"
     )
+    return scene_acc
 
 
 
