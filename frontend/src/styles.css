@@ -1,0 +1,110 @@
+body{
+  margin:0;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg,#4facfe,#00f2fe);
+  min-height:100vh;
+}
+
+/* NAVBAR */
+
+.navbar{
+  background:#0f172a;
+  color:white;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 40px;
+}
+
+.nav-links a{
+  color:white;
+  margin-left:20px;
+  text-decoration:none;
+  font-weight:500;
+}
+
+/* HERO */
+
+.hero{
+  text-align:center;
+  padding:100px 20px;
+  color:white;
+}
+
+.hero h1{
+  font-size:56px;
+  margin-bottom:20px;
+}
+
+.hero p{
+  font-size:20px;
+  opacity:0.9;
+}
+
+.hero button{
+  margin-top:25px;
+  padding:14px 32px;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(45deg,#ff6a00,#ee0979);
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+}
+
+/* GRID */
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:30px;
+  margin:50px auto;
+  width:90%;
+  max-width:1200px;
+}
+
+/* CARD */
+
+.card{
+  background:white;
+  padding:25px;
+  border-radius:16px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* UPLOAD */
+
+.upload-box{
+  border:3px dashed #4facfe;
+  padding:50px;
+  border-radius:16px;
+  text-align:center;
+  cursor:pointer;
+  background:white;
+}
+
+/* RESULT */
+
+.prediction{
+  display:flex;
+  justify-content:space-between;
+  margin-top:20px;
+}
+
+.scene{
+  font-size:24px;
+  color:#ff4d4d;
+}
+
+.device{
+  font-size:22px;
+  color:#0077ff;
+}
+
+/* ANALYTICS */
+
+.analytics-container{
+  width:90%;
+  max-width:1200px;
+  margin:auto;
+}

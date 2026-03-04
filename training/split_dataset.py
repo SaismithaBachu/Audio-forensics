@@ -4,6 +4,7 @@ import os
 
 # -------- CONFIG --------
 META_PATH = r"D:\MajorProject\data\raw\TAU_2020\meta.csv"
+# META_PATH = r"D:\audio forensics\Audio-forensics\datasets\TAU_2020\meta.csv"
 SPLIT_DIR = "../splits"
 # ------------------------
 

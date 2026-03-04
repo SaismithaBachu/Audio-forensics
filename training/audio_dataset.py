@@ -27,6 +27,9 @@ class MultiTaskAudioDataset(Dataset):
         # Keep only existing files (for partial dataset)
         self.df = self.df[self.df["full_path"].apply(os.path.exists)].reset_index(drop=True)
 
+        print("Scenes after filtering:")
+        print(self.df["scene_label"].value_counts())
+
         print(f"Usable audio files: {len(self.df)}")
 
         self.scene_to_idx = {s: i for i, s in enumerate(sorted(self.df["scene_label"].unique()))}

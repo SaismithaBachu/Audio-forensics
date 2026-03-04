@@ -20,6 +20,7 @@ LR = 1e-3
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 DATASET_ROOT = r"D:\MajorProject\data\raw\TAU_2020"
+# DATASET_ROOT = r"D:\audio forensics\Audio-forensics\datasets\TAU_2020"
 # ----------------------------------------
 
 

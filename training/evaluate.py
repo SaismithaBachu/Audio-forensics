@@ -16,7 +16,8 @@ from models.multitask_crnn import MultiTaskCRNN
 # ---------------- CONFIG ----------------
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-DATASET_ROOT = r"D:\MajorProject\data\raw\TAU_2020"
+META_PATH = r"D:\MajorProject\data\raw\TAU_2020\meta.csv"
+# DATASET_ROOT = r"D:\audio forensics\Audio-forensics\datasets\TAU_2020"
 CHECKPOINT_PATH = "artifacts/checkpoint_epoch8.pth"
 # ----------------------------------------
 
@@ -34,8 +35,10 @@ def main():
         shuffle=False
     )
 
-    num_scenes = len(val_dataset.scene_to_idx)
-    num_devices = len(val_dataset.device_to_idx)
+    # num_scenes = len(val_dataset.scene_to_idx)
+    # num_devices = len(val_dataset.device_to_idx)
+    num_scenes=3
+    num_devices=3
 
     model = MultiTaskCRNN(num_scenes, num_devices).to(DEVICE)
     checkpoint = torch.load(CHECKPOINT_PATH, map_location=DEVICE)
