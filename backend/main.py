@@ -25,7 +25,7 @@ app.add_middleware(
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-NUM_SCENES = 8
+NUM_SCENES = 10
 NUM_DEVICES = 3
 
 SCENE_LABELS = [
@@ -36,7 +36,9 @@ SCENE_LABELS = [
     "park",
     "public_square",
     "shopping_mall",
-    "street_pedestrian"
+    "street_pedestrian",
+    "street_traffic",
+    "tram"
 ]
 
 DEVICE_LABELS = ["Device A", "Device B", "Device C"]
@@ -45,7 +47,7 @@ MAX_FRAMES = 320
 SR = 44100
 
 model = MultiTaskCRNN(NUM_SCENES, NUM_DEVICES).to(DEVICE)
-checkpoint = torch.load("../training/artifacts/checkpoint_epoch8.pth", map_location=DEVICE)
+checkpoint = torch.load("../training/artifacts/checkpoint_epoch12.pth", map_location=DEVICE)
 model.load_state_dict(checkpoint["model_state_dict"])
 model.eval()
 
