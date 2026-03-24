@@ -1,31 +1,3 @@
-// import React from "react";
-
-// export default function Home(){
-
-// return(
-
-// <div>
-
-// <div className="hero">
-
-// <h1>Audio Scene Intelligence</h1>
-
-// <p>
-// Detect environments and recording devices using deep learning.
-// </p>
-
-// <button>
-// Start Analysis
-// </button>
-
-// </div>
-
-// </div>
-
-// );
-
-// }
-
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -78,7 +50,7 @@ function HeroVisual() {
 const FEATURES = [
   { icon: "🎙️", title: "Mel-Spectrogram Analysis", tag: "Signal Processing", desc: "Every upload is converted to a 128-bin mel-spectrogram — the same frequency representation your ear uses." },
   { icon: "🧠", title: "Multi-Task CRNN", tag: "Deep Learning", desc: "One model simultaneously predicts acoustic scene and recording device from a single forward pass." },
-  { icon: "📡", title: "10 Acoustic Scenes", tag: "Classification", desc: "Airport, bus, metro, park, public square, shopping mall, and more — classified in under a second." },
+  { icon: "📡", title: "8 Acoustic Scenes", tag: "Classification", desc: "Airport, bus, metro, park, public square, shopping mall, and more — classified in under a second." },
   { icon: "🎚️", title: "Waveform Visualiser", tag: "Audio Preview", desc: "Interactive waveform lets you play, scrub, and inspect your audio before and after analysis." },
   { icon: "📊", title: "Confidence Distribution", tag: "Explainability", desc: "Full probability breakdown across all scene classes — not just the top result." },
   { icon: "🔬", title: "Device Fingerprinting", tag: "Forensics", desc: "Identifies which recording device captured the audio — useful for forensic workflows." },
@@ -247,7 +219,7 @@ export default function Home() {
       {/* FOOTER */}
       <footer className="footer">
         <div className="footer-logo">Sono<span>Lens</span></div>
-        <div className="footer-meta">Built by SaismithaBachu · Open Source · GitHub</div>
+        <div className="footer-meta"> · Open Source · GitHub</div>
         <div className="footer-meta">For research purposes only. Not legal forensic advice.</div>
       </footer>
     </div>

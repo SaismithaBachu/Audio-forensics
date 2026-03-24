@@ -1,38 +1,5 @@
-// import React from "react";
-
-// export default function PredictionCard({ scene, device }) {
-
-//   return (
-
-//     <div className="card">
-
-//       <h2>Prediction Result</h2>
-
-//       <div className="prediction">
-
-//         <div>
-//           <h4>Scene</h4>
-//           <div className="scene">
-//             {scene}
-//           </div>
-//         </div>
-
-//         <div>
-//           <h4>Device</h4>
-//           <div className="device">
-//             {device}
-//           </div>
-//         </div>
-
-//       </div>
-
-//     </div>
-
-//   );
-
-// }
-
 import React from "react";
+import { getDevice } from "../config/scenes";
 
 function ConfidenceGauge({ score }) {
   const pct = Math.min(Math.max(score, 0), 100);
@@ -58,9 +25,10 @@ function ConfidenceGauge({ score }) {
   );
 }
 
-export default function PredictionCard({ scene, device, sceneProbs, deviceProbs, filename, sampleRate, duration }) {
+export default function PredictionCard({ scene, device, sceneProbs, deviceProbs, filename }) {
   const topSceneConf = sceneProbs ? Math.round(Math.max(...sceneProbs) * 100) : null;
   const topDeviceConf = deviceProbs ? Math.round(Math.max(...deviceProbs) * 100) : null;
+  const deviceInfo = getDevice(device);
 
   return (
     <>
@@ -82,29 +50,41 @@ export default function PredictionCard({ scene, device, sceneProbs, deviceProbs,
 
         <div className="os-right">
           <div className="os-label">Recording Device</div>
-          <div className="os-device-val">{device}</div>
+          <div className="os-device-val">{deviceInfo.label}</div>
+          <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, opacity: 0.75, marginTop: 5 }}>
+            ({deviceInfo.sub})
+          </div>
           {topDeviceConf !== null && (
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, opacity: 0.7, marginTop: 4 }}>
-              Device confidence: {topDeviceConf}%
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, opacity: 0.6, marginTop: 4 }}>
+              Confidence: {topDeviceConf}%
             </div>
           )}
         </div>
       </div>
 
-      {/* Stats row - all audio-relevant */}
+      {/* Stats row */}
       <div className="stats-row">
         <div className="stat-card">
           <div className="sc-label">Acoustic Scene</div>
           <div className="sc-value indigo" style={{ textTransform: "capitalize", fontSize: 16 }}>{scene}</div>
         </div>
+
         <div className="stat-card">
           <div className="sc-label">Recording Device</div>
-          <div className="sc-value" style={{ fontSize: 16 }}>{device}</div>
+          <div className="sc-value" style={{ fontSize: 16 }}>{deviceInfo.label}</div>
+          <div style={{
+            fontFamily: "var(--font-mono)", fontSize: 11,
+            color: "var(--text-3)", marginTop: 5
+          }}>
+            ({deviceInfo.sub})
+          </div>
         </div>
+
         <div className="stat-card">
           <div className="sc-label">Scene Confidence</div>
           <div className="sc-value indigo">{topSceneConf !== null ? `${topSceneConf}%` : "—"}</div>
         </div>
+
         <div className="stat-card">
           <div className="sc-label">Device Confidence</div>
           <div className="sc-value">{topDeviceConf !== null ? `${topDeviceConf}%` : "—"}</div>
@@ -112,7 +92,7 @@ export default function PredictionCard({ scene, device, sceneProbs, deviceProbs,
       </div>
 
       {/* Confidence gauge */}
-      <div className="card" style={{ gridColumn: "span 1" }}>
+      <div className="card">
         <div className="card-title">Prediction Confidence</div>
         <ConfidenceGauge score={topSceneConf ?? 0} />
       </div>
